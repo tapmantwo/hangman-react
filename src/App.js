@@ -1,9 +1,35 @@
+
 import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react'
+
+function Word({word, guesses}) {
+  const characters = [...word]
+
+  return (
+    <div id='word'>
+      <ol>
+        {characters.map((character, index) => {
+          const isGuessed = guesses.includes(character)
+          return (
+            <li>{isGuessed ? character : '_'}</li>
+          )
+          })}
+      </ol>
+    </div>
+  )
+}
 
 function App() {
+  const [guesses, setGuesses] = useState([]);
+
+  const handleKeyDown = (event) => {
+    const newGuesses = [...guesses, event.key]
+    setGuesses(newGuesses)
+  }
+
   return (
-    <div className="App">
+    <div tabIndex={0} className="App" onKeyDown={handleKeyDown}>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -15,9 +41,10 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Learn React Suckers!
         </a>
       </header>
+      <Word word='cheese' guesses={guesses}/>
     </div>
   );
 }

@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+#word ol {
+  font-family: monospace;
+  font-size: 48px;
+  list-style: none;
+}
+
+#word ol li {
+  display: inline-block;
+  text-decoration: underline;
+  margin-right: 10px;
+}
