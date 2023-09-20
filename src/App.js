@@ -20,8 +20,31 @@ function Word({word, guesses}) {
   )
 }
 
+function Wrong({word, guesses}) {
+  const characters = [...word]
+
+  const incorrectGuesses = guesses.filter((guess, index) => !characters.includes(guess))
+
+  return (
+    <div id = "wrong">
+      <ul>
+        {incorrectGuesses.map((guess, index) => {
+          const isLastGuess = index == incorrectGuesses.length -1
+          return (
+            <li>
+              {guess.toUpperCase()}
+              {!isLastGuess && ','}
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
 function App() {
   const [guesses, setGuesses] = useState([]);
+  const [word, setWord] = useState('cheese');
 
   const handleKeyDown = (event) => {
     const newGuesses = [...guesses, event.key]
@@ -30,21 +53,8 @@ function App() {
 
   return (
     <div tabIndex={0} className="App" onKeyDown={handleKeyDown}>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React Suckers!
-        </a>
-      </header>
-      <Word word='cheese' guesses={guesses}/>
+      <Word word={word} guesses={guesses}/>
+      <Wrong word={word} guesses={guesses}/>
     </div>
   );
 }
