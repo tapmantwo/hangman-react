@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 
 function Word({word, guesses}) {
   const characters = [...word]
-
   return (
     <div id='word'>
       <ol>
@@ -20,11 +19,7 @@ function Word({word, guesses}) {
   )
 }
 
-function Wrong({word, guesses}) {
-  const characters = [...word]
-
-  const incorrectGuesses = guesses.filter((guess, index) => !characters.includes(guess))
-
+function Wrong({word, incorrectGuesses}) {
   return (
     <div id = "wrong">
       <ul>
@@ -42,21 +37,41 @@ function Wrong({word, guesses}) {
   )
 }
 
+function Scene({word, incorrectGuesses}) {
+  const numOfIncorrectGuesses = incorrectGuesses.length + 1
+  const imageUrl = `${process.env.PUBLIC_URL}/${numOfIncorrectGuesses}.jpg`
+  return(
+    <div id="scene">
+      <img src={imageUrl}/>
+    </div>
+  )
+}
+
 function App() {
   const [guesses, setGuesses] = useState([]);
   const [word, setWord] = useState('cheese');
-
+  const [incorrectGuesses, setIncorrectGuesses] = useState([]);
+  
   const handleKeyDown = (event) => {
-    const newGuesses = [...guesses, event.key]
-    setGuesses(newGuesses)
+    const characters = [...word]
+    if (characters.includes(event.key)){
+      const newGuesses = [...guesses, event.key]
+      setGuesses(newGuesses)
+    } else if(!incorrectGuesses.includes(event.key)){
+      const newIncorrectGuesses = [...incorrectGuesses, event.key]
+      setIncorrectGuesses(newIncorrectGuesses)
+    }
   }
 
   return (
     <div tabIndex={0} className="App" onKeyDown={handleKeyDown}>
       <Word word={word} guesses={guesses}/>
-      <Wrong word={word} guesses={guesses}/>
+      <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
+      <Scene word={word} incorrectGuesses={incorrectGuesses}/>
     </div>
   );
 }
+
+
 
 export default App;
