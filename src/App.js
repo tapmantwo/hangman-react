@@ -1,6 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react'
+
+const LOWER_CASE_A = 97;
+const LOWER_CASE_Z = 122;
 
 const words = [
   "apple",
@@ -82,15 +84,22 @@ const words = [
 function Word({word, guesses}) {
   const characters = [...word]
   return (
-    <div id='word'>
-      <ol>
-        {characters.map((character, index) => {
+    <div class="word">
+      {characters.map((character, index) => {
           const isGuessed = guesses.includes(character)
           return (
-            <li>{isGuessed ? character : '_'}</li>
+            <div class="scene scene--card">
+              <div key={`word-${index}`} class={`card ${isGuessed ? 'is-flipped' : ''}`}>
+                <div class="card__face card__face--front">?</div>
+                <div class="card__face card__face--back">
+                  <span class="char">
+                    {isGuessed ? character : '_'}
+                  </span>
+                </div>
+              </div>
+            </div>
           )
-          })}
-      </ol>
+      })}
     </div>
   )
 }
@@ -102,7 +111,7 @@ function Wrong({word, incorrectGuesses}) {
         {incorrectGuesses.map((guess, index) => {
           const isLastGuess = index == incorrectGuesses.length -1
           return (
-            <li>
+            <li key={`wrong-${index}`}>
               {guess.toUpperCase()}
               {!isLastGuess && ','}
             </li>
@@ -128,7 +137,6 @@ const GameStates = {
 	Won: 1,
 	Lost: 2,
 }
-
 
 const pickWord = () => {
   const randomWord = Math.floor((Math.random() * words.length - 1));
@@ -162,12 +170,18 @@ function App() {
   }, [correctGuesses])
 
   const handleKeyDown = (event) => {
+    const letter = event.key.toLowerCase();
+    const charCode = letter.charCodeAt(0);
+    if(charCode < LOWER_CASE_A || charCode > LOWER_CASE_Z || letter.length > 1) {
+        return
+    }
+
     const characters = [...word]
-    if (characters.includes(event.key)){
-      const newGuesses = [...correctGuesses, event.key]
+    if (characters.includes(letter)){
+      const newGuesses = [...correctGuesses, letter]
       setCorrectGuesses(newGuesses)
-    } else if(!incorrectGuesses.includes(event.key)){
-      const newIncorrectGuesses = [...incorrectGuesses, event.key]
+    } else if(!incorrectGuesses.includes(letter)){
+      const newIncorrectGuesses = [...incorrectGuesses, letter]
       setIncorrectGuesses(newIncorrectGuesses)
       if(newIncorrectGuesses.length === 8) {
         setGameState(GameStates.Lost)

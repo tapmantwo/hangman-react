@@ -26,3 +26,61 @@
   display: inline-block;
   margin-right: 10px;
 }
+
+.word {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.scene {
+  display: inline-block;
+  width: 150px;
+  height: 200px;
+  margin: 0 5px;
+  perspective: 600px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transform-origin: center right;
+  transition: transform 1s;
+}
+
+.card.is-flipped {
+  transform: translateX(-100%) rotateY(-180deg);
+}
+
+.card__face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /*line-height: 260px;*/
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  backface-visibility: hidden;
+}
+
+.card__face--front {
+  background: blue;
+}
+
+.card__face--back {
+  background: green;
+  transform: rotateY(180deg);
+}
+
+/* .char {
+  position: absolute;
+  top: 50%;
+  height: 100%;
+  left: 50%;
+} */
