@@ -92,9 +92,7 @@ function Word({word, guesses}) {
               <div key={`word-${index}`} class={`card ${isGuessed ? 'is-flipped' : ''}`}>
                 <div class="card__face card__face--front">?</div>
                 <div class="card__face card__face--back">
-                  <span class="char">
-                    {isGuessed ? character : '_'}
-                  </span>
+                  {isGuessed ? character : '_'}
                 </div>
               </div>
             </div>

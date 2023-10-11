@@ -67,6 +67,9 @@
   font-weight: bold;
   font-size: 40px;
   backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card__face--front {
@@ -77,10 +80,3 @@
   background: green;
   transform: rotateY(180deg);
 }
-
-/* .char {
-  position: absolute;
-  top: 50%;
-  height: 100%;
-  left: 50%;
-} */
