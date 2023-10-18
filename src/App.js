@@ -1,5 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react'
+import ConfettiExplosion from 'react-confetti-explosion';
+
 
 const LOWER_CASE_A = 97;
 const LOWER_CASE_Z = 122;
@@ -167,43 +169,54 @@ function App() {
     }
   }, [correctGuesses])
 
-  const handleKeyDown = (event) => {
-    const letter = event.key.toLowerCase();
-    const charCode = letter.charCodeAt(0);
-    if(charCode < LOWER_CASE_A || charCode > LOWER_CASE_Z || letter.length > 1) {
-        return
-    }
-
-    const characters = [...word]
-    if (characters.includes(letter)){
-      const newGuesses = [...correctGuesses, letter]
-      setCorrectGuesses(newGuesses)
-    } else if(!incorrectGuesses.includes(letter)){
-      const newIncorrectGuesses = [...incorrectGuesses, letter]
-      setIncorrectGuesses(newIncorrectGuesses)
-      if(newIncorrectGuesses.length === 8) {
-        setGameState(GameStates.Lost)
+  useEffect(() => {
+    const handleKeyDown = (event) => {      
+      if(gameState === GameStates.Playing) {
+        const letter = event.key.toLowerCase();
+        const charCode = letter.charCodeAt(0);
+        if(charCode < LOWER_CASE_A || charCode > LOWER_CASE_Z || letter.length > 1) {
+            return
+        }
+        
+        const characters = [...word]
+        if (characters.includes(letter)){
+          const newGuesses = [...correctGuesses, letter]
+          setCorrectGuesses(newGuesses)
+        } else if(!incorrectGuesses.includes(letter)){
+          const newIncorrectGuesses = [...incorrectGuesses, letter]
+          setIncorrectGuesses(newIncorrectGuesses)
+          if(newIncorrectGuesses.length === 8) {
+            setGameState(GameStates.Lost)
+          }
+        }
       }
     }
-  }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return function cleanup() {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [correctGuesses, incorrectGuesses, word]);
 
   return (
     <>
-      {gameState === GameStates.Playing && (
-        <div tabIndex={0} className="App" onKeyDown={handleKeyDown}>
-          <Word word={word} guesses={correctGuesses}/>
-          <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
-          <Scene word={word} incorrectGuesses={incorrectGuesses}/>
-        </div>
-      )}
-      {gameState === GameStates.Lost && (
+      <div tabIndex={0} className="App">
+        <Scene word={word} incorrectGuesses={incorrectGuesses}/>
+        <Word word={word} guesses={correctGuesses}/>
+        <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
+        {gameState === GameStates.Lost && (
         <div>
           You Lost! The word was {word}
         </div>
-      )}
-      {gameState === GameStates.Won && (
-        <div>You Won! The word was {word}</div>
-      )}
+        )}
+        {gameState === GameStates.Won && (
+          <div>
+            You Won! The word was {word}
+            <div class="confetti"><ConfettiExplosion particleCount={400} force={1} particleSize={40}/></div>
+          </div>        
+        )}
+      </div>
     </>
   );
 }

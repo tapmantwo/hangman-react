@@ -1,4 +1,18 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confetti > div {
+  margin-inline:auto;
+  top: -20px;
+}
+
 .App {
+  position: relative;
   text-align: center;
 }
 
