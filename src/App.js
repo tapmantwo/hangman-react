@@ -89,6 +89,13 @@ function Word({word, guesses}) {
     <div class="word">
       {characters.map((character, index) => {
           const isGuessed = guesses.includes(character)
+          if(character === ' ') {
+            return (
+              <div class="scene scene--space">
+                 &nbsp;
+              </div>
+            )
+          } else {
           return (
             <div class="scene scene--card">
               <div key={`word-${index}`} class={`card ${isGuessed ? 'is-flipped' : ''}`}>
@@ -99,6 +106,7 @@ function Word({word, guesses}) {
               </div>
             </div>
           )
+          }
       })}
     </div>
   )
@@ -141,7 +149,7 @@ const GameStates = {
 const pickWord = () => {
   const randomWord = Math.floor((Math.random() * words.length - 1));
   const pickedWord = words[randomWord]
-  return pickedWord
+  return pickedWord //'i love cheese'
 }
 
 function App() {
@@ -149,14 +157,27 @@ function App() {
   const [word, setWord] = useState(pickWord());
   const [incorrectGuesses, setIncorrectGuesses] = useState([]);
   const [gameState, setGameState] = useState(GameStates.Playing);
+
   const checkIfWordIsGuessed = () => {
     for(let i = 0; i < word.length; i++) {
-        if(!correctGuesses.includes(word[i])) {
-            return false
-        }
-        
+      const character = word[i];
+      if (character === ' ') {
+        continue;
+      }
+      
+      if(!correctGuesses.includes(character)) {
+        return false
+      }
     }
     return true  
+  }
+
+  const resetGame = () => {
+    const newWord = pickWord()
+    setCorrectGuesses([])
+    setWord(newWord)
+    setIncorrectGuesses([])
+    setGameState(GameStates.Playing)
   }
 
   useEffect(() => {
@@ -207,7 +228,7 @@ function App() {
         <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
         {gameState === GameStates.Lost && (
         <div>
-          You Lost! The word was {word}
+          You Lost! The answer was {word}
         </div>
         )}
         {gameState === GameStates.Won && (
@@ -216,6 +237,9 @@ function App() {
             <div class="confetti"><ConfettiExplosion particleCount={400} force={1} particleSize={40}/></div>
           </div>        
         )}
+      </div>
+      <div id="reset-button">
+        <button onClick={resetGame}>Reset</button>
       </div>
     </>
   );

@@ -51,6 +51,7 @@ body, html {
 
 .scene {
   display: inline-block;
+  flex-basis: auto;
   width: 150px;
   height: 200px;
   margin: 0 5px;
