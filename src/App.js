@@ -86,7 +86,7 @@ const words = [
 function Word({word, guesses}) {
   const characters = [...word]
   return (
-    <div class="word">
+    <div className="word">
       {characters.map((character, index) => {
           const isGuessed = guesses.includes(character)
           if(character === ' ') {
@@ -118,12 +118,13 @@ function Wrong({word, incorrectGuesses}) {
       <ul>
         {incorrectGuesses.map((guess, index) => {
           const isLastGuess = index == incorrectGuesses.length -1
-          return (
-            <li key={`wrong-${index}`}>
+          
+              return(
+              <li key={`wrong-${index}`}>
               {guess.toUpperCase()}
               {!isLastGuess && ','}
-            </li>
-          )
+              </li>
+              )
         })}
       </ul>
     </div>
@@ -144,6 +145,8 @@ const GameStates = {
 	Playing: 0,
 	Won: 1,
 	Lost: 2,
+  Start: 3,
+  EnterWord: 4,
 }
 
 const pickWord = () => {
@@ -157,7 +160,7 @@ function App() {
   const [correctGuesses, setCorrectGuesses] = useState([]);
   const [word, setWord] = useState(pickWord());
   const [incorrectGuesses, setIncorrectGuesses] = useState([]);
-  const [gameState, setGameState] = useState(GameStates.Playing);
+  const [gameState, setGameState] = useState(GameStates.Start);
 
   const checkIfWordIsGuessed = () => {
     for(let i = 0; i < word.length; i++) {
@@ -181,6 +184,16 @@ function App() {
     setGameState(GameStates.Playing)
   }
 
+  const startGame = () => {
+    setGameState(GameStates.Playing)
+    console.log(word)
+  }
+
+  const enterWord = () => {
+    setGameState(GameStates.EnterWord)
+    setWord("")
+  }
+
   useEffect(() => {
     console.log(word)
   }, [word])
@@ -193,6 +206,7 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {      
+      console.log('key down', gameState)
       if(gameState === GameStates.Playing) {
         const letter = event.key.toLowerCase();
         const charCode = letter.charCodeAt(0);
@@ -219,14 +233,23 @@ function App() {
     return function cleanup() {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [correctGuesses, incorrectGuesses, word]);
+  }, [correctGuesses, incorrectGuesses, word, gameState]);
 
   return (
     <>
       <div tabIndex={0} className="App">
-        <Scene word={word} incorrectGuesses={incorrectGuesses}/>
-        <Word word={word} guesses={correctGuesses}/>
-        <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
+        {gameState !== GameStates.Start && gameState !== GameStates.EnterWord && (
+          <>
+            <Scene word={word} incorrectGuesses={incorrectGuesses}/>
+            <Word word={word} guesses={correctGuesses}/>
+            <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
+          </>
+        )}
+        {(gameState === GameStates.Won || gameState === GameStates.Lost) && (
+          <div id="reset-button">
+            <button onClick={resetGame}>Reset</button>
+          </div>
+        )}
         {gameState === GameStates.Lost && (
         <div>
           You Lost! The answer was {word}
@@ -238,12 +261,28 @@ function App() {
             <div class="confetti"><ConfettiExplosion particleCount={400} force={1} particleSize={40}/></div>
           </div>        
         )}
-      </div>
-      <div id="reset-button">
-        <button onClick={resetGame}>Reset</button>
+        {gameState === GameStates.Start && (
+          <div className="start"> 
+            Welcome to Hangman! Press the button to start the game. <br></br>
+            <button onClick={startGame}>Random Word</button> <br></br>
+            <button onClick={enterWord}>Enter a word</button>
+          </div>
+        )}
+        {gameState === GameStates.EnterWord && (
+          <div class="enterWord">
+            <label for="newWord">Please enter a word to be guessed</label>
+            <input type="password" value={word} onChange={(e) => setWord(e.target.value)}></input>
+            <button onClick={startGame}>Start Game</button>
+          </div>
+
+        )}
       </div>
     </>
   );
 }
+
+
+// JOIN THIS ONE https://meet.google.com/otd-tpqf-zqo?authuser=0
+
 
 export default App;
