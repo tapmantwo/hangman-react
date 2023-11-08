@@ -149,7 +149,8 @@ const GameStates = {
 const pickWord = () => {
   const randomWord = Math.floor((Math.random() * words.length - 1));
   const pickedWord = words[randomWord]
-  return pickedWord //'i love cheese'
+  return pickedWord;
+  //return 'i love cheese'
 }
 
 function App() {
