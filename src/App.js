@@ -184,6 +184,18 @@ function App() {
     setGameState(GameStates.Playing)
   }
 
+  const pickReset = () => {
+    setGameState(GameStates.EnterWord);
+    setCorrectGuesses([])
+    setIncorrectGuesses([])
+  }
+
+  const startScreen = () => {
+    setGameState(GameStates.Start)
+    setCorrectGuesses([])
+    setIncorrectGuesses([])
+  }
+
   const startGame = () => {
     setGameState(GameStates.Playing)
     console.log(word)
@@ -246,9 +258,17 @@ function App() {
           </>
         )}
         {(gameState === GameStates.Won || gameState === GameStates.Lost) && (
+          <>
           <div id="reset-button">
             <button onClick={resetGame}>Reset</button>
           </div>
+          <div id="pickReset-button">
+            <button onClick={pickReset}>Reset Pickword</button>
+          </div>
+          <div id="startScreen-button">
+            <button onClick={startScreen}>Start Screen</button>
+          </div>
+          </>
         )}
         {gameState === GameStates.Lost && (
         <div>
@@ -262,10 +282,12 @@ function App() {
           </div>        
         )}
         {gameState === GameStates.Start && (
-          <div className="start"> 
-            Welcome to Hangman! Press the button to start the game. <br></br>
-            <button onClick={startGame}>Random Word</button> <br></br>
-            <button onClick={enterWord}>Enter a word</button>
+          <div class="start"> 
+            <h1>Welcome to Hangman! Press the button to start the game.</h1><br></br>
+            <div class="button-container">
+            <button class="button" onClick={startGame}>Random Word</button> <br></br>
+            <button class="button" onClick={enterWord}>Enter a word</button>
+            </div>
           </div>
         )}
         {gameState === GameStates.EnterWord && (
@@ -274,7 +296,6 @@ function App() {
             <input type="password" value={word} onChange={(e) => setWord(e.target.value)}></input>
             <button onClick={startGame}>Start Game</button>
           </div>
-
         )}
       </div>
     </>
