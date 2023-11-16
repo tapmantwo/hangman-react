@@ -194,6 +194,8 @@ function App() {
     setGameState(GameStates.Start)
     setCorrectGuesses([])
     setIncorrectGuesses([])
+    const newWord = pickWord;
+    setWord(newWord)
   }
 
   const startGame = () => {
@@ -233,7 +235,7 @@ function App() {
         } else if(!incorrectGuesses.includes(letter)){
           const newIncorrectGuesses = [...incorrectGuesses, letter]
           setIncorrectGuesses(newIncorrectGuesses)
-          if(newIncorrectGuesses.length === 8) {
+          if(newIncorrectGuesses.length === 7) {
             setGameState(GameStates.Lost)
           }
         }
@@ -251,11 +253,11 @@ function App() {
     <>
       <div tabIndex={0} className="App">
         {gameState !== GameStates.Start && gameState !== GameStates.EnterWord && (
-          <>
+          <div class="game">
             <Scene word={word} incorrectGuesses={incorrectGuesses}/>
             <Word word={word} guesses={correctGuesses}/>
             <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
-          </>
+          </div>
         )}
         {(gameState === GameStates.Won || gameState === GameStates.Lost) && (
           <>
@@ -292,9 +294,11 @@ function App() {
         )}
         {gameState === GameStates.EnterWord && (
           <div class="enterWord">
-            <label for="newWord">Please enter a word to be guessed</label>
+            <h3>Please enter a word to be guessed</h3>
             <input type="password" value={word} onChange={(e) => setWord(e.target.value)}></input>
-            <button onClick={startGame}>Start Game</button>
+            <div class="button-container">
+            <button class="button" onClick={startGame}>Start Game</button>
+            </div>
           </div>
         )}
       </div>
