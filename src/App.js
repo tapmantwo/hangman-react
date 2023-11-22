@@ -7,88 +7,18 @@ const LOWER_CASE_A = 97;
 const LOWER_CASE_Z = 122;
 
 const words = [
-  "apple",
-  "arrow",
-  "beach",
-  "bench",
-  "bible",
-  "bread",
-  "brick",
-  "brush",
-  "chair",
-  "child",
-  "church",
-  "cloud",
-  "coast",
-  "earth",
-  "field",
-  "flower",
-  "forest",
-  "fruit",
-  "glass",
-  "glove",
-  "grape",
-  "grass",
-  "guide",
-  "heart",
-  "horse",
-  "house",
-  "island",
-  "knife",
-  "lemon",
-  "light",
-  "market",
-  "melon",
-  "money",
-  "month",
-  "mount",
-  "mouse",
-  "music",
-  "night",
-  "ocean",
-  "paint",
-  "paper",
-  "phone",
-  "plane",
-  "plant",
-  "plate",
-  "puppy",
-  "rabbit",
-  "river",
-  "robot",
-  "rocky",
-  "salad",
-  "shark",
-  "shirt",
-  "sight",
-  "skirt",
-  "slope",
-  "smile",
-  "snake",
-  "space",
-  "sugar",
-  "table",
-  "teeth",
-  "tiger",
-  "title",
-  "torch",
-  "train",
-  "valve",
-  "voice",
-  "water",
-  "wheel",
-  "window",
-  "woman",
-  "world",
-  "yacht",
-  "zebra"
+  { value: "Back To The Future", hint: 'Movie'},
+  { value: "Highway To Hell", hint: 'Song'},
+  { value: "Barbara Streisand", hint: 'Actress'},
+  { value: "Candy Floss", hint: 'Food'}
 ]
+
 function Word({word, guesses}) {
   const characters = [...word]
   return (
     <div className="word">
       {characters.map((character, index) => {
-          const isGuessed = guesses.includes(character)
+          const isGuessed = guesses.includes(character.toLowerCase())
           if(character === ' ') {
             return (
               <div class="scene scene--space">
@@ -108,6 +38,14 @@ function Word({word, guesses}) {
           )
           }
       })}
+    </div>
+  )
+}
+
+function Hint({hint}) {
+  return(
+    <div id = "hint">
+      (Hint: {hint})
     </div>
   )
 }
@@ -153,7 +91,7 @@ const pickWord = () => {
   const randomWord = Math.floor((Math.random() * words.length - 1));
   const pickedWord = words[randomWord]
   return pickedWord;
-  //return 'i love cheese'
+  //return {value:'cheese and onion crisps', hint: 'food'}
 }
 
 function App() {
@@ -163,8 +101,9 @@ function App() {
   const [gameState, setGameState] = useState(GameStates.Start);
 
   const checkIfWordIsGuessed = () => {
-    for(let i = 0; i < word.length; i++) {
-      const character = word[i];
+    console.log("Word is ", word)
+    for(let i = 0; i < word.value.length; i++) {
+      const character = word.value[i].toLowerCase();
       if (character === ' ') {
         continue;
       }
@@ -228,7 +167,7 @@ function App() {
             return
         }
         
-        const characters = [...word]
+        const characters = [...word.value.toLowerCase()]
         if (characters.includes(letter)){
           const newGuesses = [...correctGuesses, letter]
           setCorrectGuesses(newGuesses)
@@ -254,9 +193,10 @@ function App() {
       <div tabIndex={0} className="App">
         {gameState !== GameStates.Start && gameState !== GameStates.EnterWord && (
           <div class="game">
-            <Scene word={word} incorrectGuesses={incorrectGuesses}/>
-            <Word word={word} guesses={correctGuesses}/>
-            <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
+            <Scene word={word.value} incorrectGuesses={incorrectGuesses}/>
+            <Word word={word.value} guesses={correctGuesses}/>
+            <Hint hint={word.hint}/>
+            <Wrong word={word.value} incorrectGuesses={incorrectGuesses}/>
           </div>
         )}
         {(gameState === GameStates.Won || gameState === GameStates.Lost) && (
@@ -274,12 +214,12 @@ function App() {
         )}
         {gameState === GameStates.Lost && (
         <div>
-          You Lost! The answer was {word}
+          You Lost! The answer was {word.value}
         </div>
         )}
         {gameState === GameStates.Won && (
           <div>
-            You Won! The word was {word}
+            You Won! The word was {word.value}
             <div class="confetti"><ConfettiExplosion particleCount={400} force={1} particleSize={40}/></div>
           </div>        
         )}
@@ -295,7 +235,7 @@ function App() {
         {gameState === GameStates.EnterWord && (
           <div class="enterWord">
             <h3>Please enter a word to be guessed</h3>
-            <input type="password" value={word} onChange={(e) => setWord(e.target.value)}></input>
+            <input type="password" value={word.value} onChange={(e) => setWord({value:e.target.value, hint: 'manually inputed'})}></input>
             <div class="button-container">
             <button class="button" onClick={startGame}>Start Game</button>
             </div>
@@ -307,7 +247,6 @@ function App() {
 }
 
 
-// JOIN THIS ONE https://meet.google.com/otd-tpqf-zqo?authuser=0
 
 
 export default App;
