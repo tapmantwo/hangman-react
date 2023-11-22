@@ -184,6 +184,20 @@ function App() {
     setGameState(GameStates.Playing)
   }
 
+  const pickReset = () => {
+    setGameState(GameStates.EnterWord);
+    setCorrectGuesses([])
+    setIncorrectGuesses([])
+  }
+
+  const startScreen = () => {
+    setGameState(GameStates.Start)
+    setCorrectGuesses([])
+    setIncorrectGuesses([])
+    const newWord = pickWord;
+    setWord(newWord)
+  }
+
   const startGame = () => {
     setGameState(GameStates.Playing)
     console.log(word)
@@ -221,7 +235,7 @@ function App() {
         } else if(!incorrectGuesses.includes(letter)){
           const newIncorrectGuesses = [...incorrectGuesses, letter]
           setIncorrectGuesses(newIncorrectGuesses)
-          if(newIncorrectGuesses.length === 8) {
+          if(newIncorrectGuesses.length === 7) {
             setGameState(GameStates.Lost)
           }
         }
@@ -239,16 +253,24 @@ function App() {
     <>
       <div tabIndex={0} className="App">
         {gameState !== GameStates.Start && gameState !== GameStates.EnterWord && (
-          <>
+          <div class="game">
             <Scene word={word} incorrectGuesses={incorrectGuesses}/>
             <Word word={word} guesses={correctGuesses}/>
             <Wrong word={word} incorrectGuesses={incorrectGuesses}/>
-          </>
+          </div>
         )}
         {(gameState === GameStates.Won || gameState === GameStates.Lost) && (
+          <>
           <div id="reset-button">
             <button onClick={resetGame}>Reset</button>
           </div>
+          <div id="pickReset-button">
+            <button onClick={pickReset}>Reset Pickword</button>
+          </div>
+          <div id="startScreen-button">
+            <button onClick={startScreen}>Start Screen</button>
+          </div>
+          </>
         )}
         {gameState === GameStates.Lost && (
         <div>
@@ -262,19 +284,22 @@ function App() {
           </div>        
         )}
         {gameState === GameStates.Start && (
-          <div className="start"> 
-            Welcome to Hangman! Press the button to start the game. <br></br>
-            <button onClick={startGame}>Random Word</button> <br></br>
-            <button onClick={enterWord}>Enter a word</button>
+          <div class="start"> 
+            <h1>Welcome to Hangman! Press the button to start the game.</h1><br></br>
+            <div class="button-container">
+            <button class="button" onClick={startGame}>Random Word</button> <br></br>
+            <button class="button" onClick={enterWord}>Enter a word</button>
+            </div>
           </div>
         )}
         {gameState === GameStates.EnterWord && (
           <div class="enterWord">
-            <label for="newWord">Please enter a word to be guessed</label>
+            <h3>Please enter a word to be guessed</h3>
             <input type="password" value={word} onChange={(e) => setWord(e.target.value)}></input>
-            <button onClick={startGame}>Start Game</button>
+            <div class="button-container">
+            <button class="button" onClick={startGame}>Start Game</button>
+            </div>
           </div>
-
         )}
       </div>
     </>
