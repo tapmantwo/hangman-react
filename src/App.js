@@ -200,17 +200,6 @@ const pickWord = (usedWord, setUsedWord) => {
   console.log(randomWord, pickedWord, availableWords)
   setUsedWord([...usedWord, pickedWord.value])
   return pickedWord;
-  //return {value:'cheese and onion crisps', hint: 'food'}
-  // if (availableWords.length === 0) {
-    // setUsedWords([])
-    // return pickWord()
-  // }
-  // const availableWords = words.filter(usedWord)
-  // const randomWord = Math.floor((Math.random() * availableWords.length - 1));
-  //words.filter(word => usedWords.includes(word.value) === true)
-  // setUsedWords = [...usedWords, pickedWord.value]
-
-//   //   https://meet.google.com/kji-ewje-hne
 }
 
 function App() {
@@ -238,32 +227,17 @@ function App() {
     return true  
   }
 
-  const resetGame = () => {
-    setCorrectGuesses([])
-    setIncorrectGuesses([])
-    const newWord = pickWord(usedWord, setUsedWord);
-    setWord(newWord)
-    console.log(word)
-    setGameState(GameStates.Playing)
-  }
-
-  const pickReset = () => {
-    setGameState(GameStates.EnterWord);
-    setCorrectGuesses([])
-    setIncorrectGuesses([])
-  }
-
-  const startScreen = () => {
-    setGameState(GameStates.Start)
-  }
-
   const startGame = () => {
     setCorrectGuesses([])
     setIncorrectGuesses([])
+    setGameState(GameStates.Playing)
+  }
+
+  const startRandomWordGame = () => {
     const newWord = pickWord(usedWord, setUsedWord);
     setWord(newWord)
     console.log(word)
-    setGameState(GameStates.Playing)
+    startGame()
   }
 
   const enterWord = () => {
@@ -325,14 +299,9 @@ function App() {
         )}
         {(gameState === GameStates.Won || gameState === GameStates.Lost) && (
           <>
-          <div id="reset-button">
-            <button onClick={resetGame}>Reset</button>
-          </div>
-          <div id="pickReset-button">
-            <button onClick={pickReset}>Reset Pickword</button>
-          </div>
-          <div id="startScreen-button">
-            <button onClick={startScreen}>Start Screen</button>
+          <div class="button-container">
+            <button class="button" onClick={startRandomWordGame}>Random Word</button> <br></br>
+            <button class="button" onClick={enterWord}>Enter a word</button>
           </div>
           </>
         )}
@@ -351,7 +320,7 @@ function App() {
           <div class="start"> 
             <h1>Welcome to Hangman! Press the button to start the game.</h1><br></br>
             <div class="button-container">
-            <button class="button" onClick={startGame}>Random Word</button> <br></br>
+            <button class="button" onClick={startRandomWordGame}>Random Word</button> <br></br>
             <button class="button" onClick={enterWord}>Enter a word</button>
             </div>
           </div>
