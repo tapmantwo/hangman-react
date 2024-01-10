@@ -15,10 +15,21 @@ function Word({word, guesses}) {
     <div className="word">
       {characters.map((character, index) => {
           const isGuessed = guesses.includes(character.toLowerCase())
+          const charCode = character.toLowerCase().charCodeAt(0);
           if(character === ' ') {
             return (
               <div class="scene scene--space">
                  &nbsp;
+              </div>
+            )
+          } else if(charCode > LOWER_CASE_Z || charCode < LOWER_CASE_A){
+            return(
+              <div class="scene scene--card">
+                <div key={`word-${index}`} class={`card`}>
+                  <div class="card__face card__face--punctuation">
+                    {character}
+                  </div>
+                </div>
               </div>
             )
           } else {
@@ -119,7 +130,12 @@ function App() {
 
     for(let i = 0; i < word.value.length; i++) {
       const character = word.value[i].toLowerCase();
+      const charCode = character.charCodeAt(0)
       if (character === ' ') {
+        continue;
+      }
+
+      if (charCode > LOWER_CASE_Z || charCode < LOWER_CASE_A) {
         continue;
       }
       
