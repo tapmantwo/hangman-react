@@ -155,3 +155,7 @@ body, html {
   background: green;
   transform: rotateY(180deg);
 }
+
+.card__face--punctuation {
+  background: linear-gradient(135deg,#52c234, #061700);
+}
