@@ -78,12 +78,12 @@ function Wrong({word, incorrectGuesses}) {
         {incorrectGuesses.map((guess, index) => {
           const isLastGuess = index === incorrectGuesses.length -1
           
-              return(
-              <li key={`wrong-${index}`}>
+          return(
+            <li key={`wrong-${index}`}>
               {guess.toUpperCase()}
               {!isLastGuess && ','}
-              </li>
-              )
+            </li>
+          )
         })}
       </ul>
     </div>
@@ -116,7 +116,7 @@ const pickWord = (usedWord, setUsedWord) => {
 
   const availableWords = words.filter(word => !usedWord.includes(word.value))
   const randomWord = Math.floor((Math.random() * availableWords.length));
-  const pickedWord = { value: "'some' word"} // availableWords[randomWord]
+  const pickedWord = availableWords[randomWord]
   setUsedWord([...usedWord, pickedWord.value])
   return pickedWord;
 }
