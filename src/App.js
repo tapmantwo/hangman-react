@@ -9,20 +9,24 @@ const LOWER_CASE_Z = 122;
 var losses = 0
 var wins = 0
 
+const isLetter = (character) => {
+  const charCode = character.toLowerCase().charCodeAt(0);
+  return charCode >= LOWER_CASE_A && charCode <= LOWER_CASE_Z
+}
+
 function Word({word, guesses}) {
   const characters = [...word]
   return (
     <div className="word">
       {characters.map((character, index) => {
           const isGuessed = guesses.includes(character.toLowerCase())
-          const charCode = character.toLowerCase().charCodeAt(0);
           if(character === ' ') {
             return (
               <div class="scene scene--space">
                  &nbsp;
               </div>
             )
-          } else if(charCode > LOWER_CASE_Z || charCode < LOWER_CASE_A){
+          } else if(!isLetter(character)){
             return(
               <div class="scene scene--card">
                 <div key={`word-${index}`} class={`card`}>
@@ -112,7 +116,7 @@ const pickWord = (usedWord, setUsedWord) => {
 
   const availableWords = words.filter(word => !usedWord.includes(word.value))
   const randomWord = Math.floor((Math.random() * availableWords.length));
-  const pickedWord = availableWords[randomWord]
+  const pickedWord = { value: "'some' word"} // availableWords[randomWord]
   setUsedWord([...usedWord, pickedWord.value])
   return pickedWord;
 }
@@ -135,7 +139,7 @@ function App() {
         continue;
       }
 
-      if (charCode > LOWER_CASE_Z || charCode < LOWER_CASE_A) {
+      if (!isLetter(character)) {
         continue;
       }
       
@@ -176,7 +180,7 @@ function App() {
       if(gameState === GameStates.Playing) {
         const letter = event.key.toLowerCase();
         const charCode = letter.charCodeAt(0);
-        if(charCode < LOWER_CASE_A || charCode > LOWER_CASE_Z || letter.length > 1) {
+        if(!isLetter(letter) || letter.length > 1) {
             return
         }
         
