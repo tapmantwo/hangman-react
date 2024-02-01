@@ -62,6 +62,10 @@ function Hint({hint}) {
 }
 
 function Score({wins,losses}) {
+  useEffect(() => {
+    localStorage.setItem('wins', wins)
+    localStorage.setItem('losses', losses)
+  }, [wins,losses])
   return(
     <div>
       <br></br>
